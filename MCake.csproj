@@ -28,10 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Shop\" />
-    <Folder Include="wwwroot\popup\assets\images\demos\demo-6\products\" />
-    <Folder Include="wwwroot\popup\assets\images\popup\quickView\" />
-    <Folder Include="wwwroot\popup\popup\" />
+    <None Include="wwwroot\*" />
   </ItemGroup>
 
   <ItemGroup>
