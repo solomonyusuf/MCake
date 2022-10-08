@@ -1,0 +1,93 @@
+﻿@page "/posts"
+@inject BlogsController _blog
+@inject MainService _main
+
+<div class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Blog</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+
+    <div class="page-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+
+                    @foreach (var i in list)
+                    {
+                        <div class="entry entry-list">
+                            <div class="row align-items-center">
+                                <div class="col-md-4">
+                                    <div class="entry-media">
+                                        <img src="@(_main.Port + i.ImagePath)" style="height:250px;width:300px;" alt="image desc" />
+
+                                    </div><!-- End .entry-media -->
+                            </div><!-- End .col-md-5 -->
+
+                            <div class="col-md-7">
+                                    <div class="entry-body">
+                                        <div class="entry-meta">
+                                            <strong>@i.Time.ToLongDateString()</strong>
+                                        </div><!-- End .entry-meta -->
+
+                                    <h2 class="entry-title">
+                                            <b style="color:brown;">@i.Title</b>
+                                        </h2><!-- End .entry-title -->
+
+                                    <div class="entry-content">
+                                            <p>@i.Body </p>
+                                        </div><!-- End .entry-content -->
+                                </div><!-- End .entry-body -->
+                            </div><!-- End .col-md-7 -->
+                        </div><!-- End .row -->
+                    </div>
+
+                        <!-- End .entry -->
+                    }
+
+
+                </div><!-- End .col-lg-9 -->
+
+                <aside class="col-lg-3">
+                    <div class="sidebar">
+                        <div class="widget widget-banner-sidebar">
+                            <div class="banner-sidebar-title">ad box 280 x 280</div><!-- End .ad-title -->
+
+                            <div class="banner-sidebar banner-overlay">
+                                <a href="#">
+                                    <img src="assets/images/blog/sidebar/banner.jpg" alt="banner">
+                                </a>
+                            </div><!-- End .banner-ad -->
+                        </div><!-- End .widget -->
+                        <div class="widget widget-banner-sidebar">
+                            <div class="banner-sidebar-title">ad box 280 x 280</div><!-- End .ad-title -->
+
+                            <div class="banner-sidebar banner-overlay">
+                                <a href="#">
+                                    <img src="assets/images/blog/sidebar/banner.jpg" alt="banner">
+                                </a>
+                            </div><!-- End .banner-ad -->
+                        </div><!-- End .widget -->
+
+
+
+
+                    </div><!-- End .sidebar -->
+                </aside><!-- End .col-lg-3 -->
+            </div><!-- End .row -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</div>
+@code {
+    const string port = "https://localhost:7030/";
+    public List<Blog> list = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = await _blog.GetBlogs();
+        list = res.Value.ToList();
+    }
+
+}

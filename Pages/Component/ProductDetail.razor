@@ -1,0 +1,148 @@
+﻿@page "/productdetail/{id}"
+@inject ProductsController _service
+@inject ImagesController _img
+@inject ApplicationDbContext _db
+@inject MainService _main
+@inject ProductCollectionsController _collection
+<div class="page-content">
+<div class="container">
+<div class="product-details-top">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="product-gallery product-gallery-vertical">
+                <div class="row">
+                    <figure class="product-main-image">
+                        <img id="product-zoom" src="@(_main.Port + product.Image_1)" data-zoom-image="@product.Image_1" alt="product image"/>
+                    </figure><!-- End .product-main-image -->
+
+                    <div id="product-zoom-gallery" class="product-image-gallery">
+                        @foreach (var item in images)
+                       {
+                           <a class="product-gallery-item active" href="@(_main.Port + item.ImagePath)">
+                            <img src="@(_main.Port + item.ImagePath)" alt="product side"/>
+                        </a>
+                       }
+                    </div><!-- End .product-image-gallery -->
+                </div><!-- End .row -->
+            </div><!-- End .product-gallery -->
+        </div><!-- End .col-md-6 -->
+
+        <div class="col-md-6">
+            <div class="product-details">
+                <h1 class="product-title">@product.ProductName</h1><!-- End .product-title -->
+                <p class="product-body">@product.Description</p>
+                <div class="ratings-container">
+                    <div class="ratings">
+                        <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                    </div><!-- End .ratings -->
+                   @* <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>*@
+                </div><!-- End .rating-container -->
+
+                <div class="product-price">
+                    $&nbsp;@product.Price.00
+                </div><!-- End .product-price -->
+                 <AuthorizeView>
+                    <Authorized>
+                 <div class="product-details-action" style="color:white;">
+                            <button @onclick="@(()=> AddToCart(product.ProductId,product))" class="btn-product btn-cart w-100 text-white">
+                                <i class="icon-shopping-cart"></i><span>add to cart</span></button>
+                        </div><!-- End .product-action -->
+                    </Authorized>
+                </AuthorizeView>
+               
+                <div class="product-details-footer">
+                </div><!-- End .product-details-footer -->
+            </div><!-- End .product-details -->
+        </div><!-- End .col-md-6 -->
+    </div><!-- End .row -->
+</div><!-- End .product-details-top -->
+
+<div class="product-details-tab">
+    <ul class="nav nav-pills justify-content-center" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab" aria-controls="product-desc-tab" aria-selected="true">Description</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab" aria-controls="product-shipping-tab" aria-selected="false">Shipping & Instructions</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
+            <div class="product-desc-content">
+                <h3>Product Information</h3>
+                <p>@product.Description</p>
+            </div><!-- End .product-desc-content -->
+        </div><!-- .End .tab-pane -->
+        <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
+            <div class="product-desc-content">
+                <h3>Delivery & returns</h3>
+                <p>We deliver to over 10 countries around Africa. For full details of the delivery options we offer,</p><br>
+                    <ul>
+                        <li>Direct Transfer</li>
+                        <li>Cash or POS Transfer</li>
+                        <li>Card Payment</li>
+                    </ul>
+               <p> We hope you’ll love every purchase, but if you ever need to return an item it may not be possible as we urge you to always confirm your orders.</p>
+            </div><!-- End .product-desc-content -->
+        </div><!-- .End .tab-pane -->
+    </div><!-- End .tab-content -->
+</div><!-- End .product-details-tab -->
+</div>
+</div>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    public Product product = new();
+    public Guid ID;
+    public List<Image> images = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+        var req = await _main.CheckCartAsync();
+        req.Subscribe(r =>
+        {
+            if(r != null)
+            {
+                ID = Guid.Parse(r);
+            }
+        });
+    }
+    async Task Get()
+    {
+        var req = await _service.GetProduct(Guid.Parse(id));
+        var img = await _img.GetImages();
+        images = img.Value.Where(i => i.ProductId.ToString().Contains(id)).ToList();
+        product = req.Value;
+       
+    }
+
+    async Task AddToCart(Guid Id, Product P)
+    {
+        var pro = new ProductCollection
+            {
+                CartId = ID,
+                ProductId = P.ProductId,
+                ProductName = P.ProductName,
+                Price = P.Price,
+                Quantity = "1",
+                Image_1 = P.Image_1,
+                Image_2 = P.Image_2,
+                ShippingPrice = P.ShippingPrice,
+                Description = P.Description,
+                Rating = P.Rating,
+                Tag = P.Tag
+            };
+
+        await _collection.PostProductCollection(pro);
+        await _main.Logger("New product added to cart");
+        var e = await _main.GetCartItemsAsync(ID);
+        e.Subscribe(y =>
+        {
+            _main.CartItems.OnNext(y);
+        });
+
+    }
+    
+
+}

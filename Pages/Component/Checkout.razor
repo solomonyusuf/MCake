@@ -1,0 +1,270 @@
+﻿@page "/checkout/{cartId}"
+@using MCake.Data
+@inject MainService _main
+@inject OrdersController _service
+@inject ApplicationDbContext _db
+@inject ProductCollectionsController _col
+@inject NavigationManager router
+@attribute [Authorize]
+<div class="container">
+    <div>
+        <div class="row">
+            <EditForm Model="@order" class="col-lg-9">
+                <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>First Name </label>
+                        <InputText @bind-Value="order.FirstName" type="text" class="form-control" required />
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6">
+                        <label>Last Name </label>
+                        <InputText @bind-Value="order.LastName" type="text" class="form-control" required />
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
+
+                <label>Company Name (Optional)</label>
+                <InputText @bind-Value="order.CompanyName" type="text" class="form-control" />
+
+                 <label>Expected Date</label>
+                <InputDate type="datetime" @bind-Value="order.ExpectedDate" class="form-control" />
+
+                <label>Select Payment method</label>
+                <InputSelect @bind-Value="order.PaymentMethod" type="text" class="form-control">
+                    @foreach (var item in Options)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </InputSelect>
+
+
+                <label>Country </label>
+                <InputText @bind-Value="order.Country" type="text" class="form-control" required />
+
+                <label>Street address </label>
+                <InputText @bind-Value="order.Address_1" type="text" class="form-control" placeholder="House number and Street name" required />
+                <InputText @bind-Value="order.Address_2" type="text" class="form-control" placeholder="Appartments, suite, unit etc ..." required />
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Town / City </label>
+                        <InputText @bind-Value="order.City" type="text" class="form-control" required />
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6">
+                        <label>State / County </label>
+                        <InputText @bind-Value="order.State" type="text" class="form-control" required />
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Postcode / ZIP </label>
+                        <InputText @bind-Value="order.Zip" type="text" class="form-control" required />
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6">
+                        <label>Phone </label>
+                        <InputText @bind-Value="order.PhoneNo" type="tel" class="form-control" required />
+                    </div><!-- End .col-sm-6 -->
+                </div><!-- End .row -->
+
+                <label>Email address </label>
+                <InputText @bind-Value="order.Email" type="email" class="form-control" required />
+
+                <label>Order notes (optional)</label>
+                <InputTextArea @bind-Value="order.OrderNote" class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery" />
+            </EditForm>
+            <aside class="col-lg-3">
+                <div class="summary">
+                    <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                    <table class="table table-summary">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var i in products)
+                            {
+                                <tr>
+                                    <td><b>@i.ProductName</b></td>
+                                    <td>$&nbsp;@(int.Parse(i.Price) * int.Parse(i.Quantity)).00</td>
+                                </tr>
+
+                            }
+                            <tr class="summary-subtotal">
+                                <td>Subtotal:</td>
+                                <td>$&nbsp;@Price.00</td>
+                            </tr><!-- End .summary-subtotal -->
+                            <tr>
+                                <td>Shipping:</td>
+                                <td>$&nbsp;@ShoppingPrice</td>
+                            </tr>
+                            <tr class="summary-total">
+                                <td>Total:</td>
+                                <td>$&nbsp;@(Price + ShoppingPrice).00</td>
+                            </tr>
+                            <tr class="summary-total">
+                                <td></td>
+                                <td>N&nbsp;@((Price + ShoppingPrice) * 720).00</td>
+                            </tr>
+                        </tbody>
+                    </table><!-- End .table table-summary -->
+
+                    <div class="accordion-summary" id="accordion-payment">
+                        <div class="card">
+                            <div class="card-header" id="heading-1">
+                                <h2 class="card-title">
+                                    <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                        Direct bank transfer
+                                    </a>
+                                </h2>
+                            </div><!-- End .card-header -->
+                            <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                <div class="card-body">
+                                    Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                                </div><!-- End .card-body -->
+                            </div><!-- End .collapse -->
+                        </div><!-- End .card -->
+
+                        <div class="card">
+                            <div class="card-header" id="heading-3">
+                                <h2 class="card-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                        Cash on delivery
+                                    </a>
+                                </h2>
+                            </div><!-- End .card-header -->
+                            <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                <div class="card-body">
+                                    Cash and both POS payment on delivery are also accepted.
+                                </div><!-- End .card-body -->
+                            </div><!-- End .collapse -->
+                        </div><!-- End .card -->
+                        <div class="card">
+                            <div class="card-header" id="heading-5">
+                                <h2 class="card-title">
+                                    <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                        Credit Card (Stripe)
+                                        <img src="assets/images/payments-summary.png" alt="payments cards">
+                                    </a>
+                                </h2>
+                            </div><!-- End .card-header -->
+                            <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                <div class="card-body">
+                                    Ensure to use correct bank details, your details are save with us.
+                                </div><!-- End .card-body -->
+                            </div><!-- End .collapse -->
+                        </div><!-- End .card -->
+
+                    </div><!-- End .accordion -->
+
+                    <button type="submit" @onclick="@Post" class="btn btn-outline-dark-2 btn-block mb-3">
+                        Proceed to Payment
+                    </button>
+                </div><!-- End .summary -->
+            </aside><!-- End .col-lg-3 -->
+        </div><!-- End .row -->
+    </div>
+
+
+</div>
+
+@code {
+    [Parameter]
+    public string cartId { get; set; }
+    public string user;
+    public Order order = new();
+    public List<ProductCollection> products = new();
+    public List<int> prices = new();
+    public List<int> shopping_price = new();
+    public int Price = new();
+    public int ShoppingPrice = new();
+    public List<string> Options = new List<string> { "", "Cash Payment or POS Payment", "Card Payment", "Direct Transfer" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    async Task Get()
+    {
+        var d = await _main.GetCartItemsAsync(Guid.Parse(cartId));
+        d.Subscribe(res =>
+        {
+            products = res;
+            res.ForEach(t => Add(int.Parse(t.Price), int.Parse(t.Quantity)));
+            res.ForEach(t => Cal(int.Parse(t.ShippingPrice)));
+        });
+
+        var w = await _main.Persist_user();
+        w.Subscribe(s => { user = s; });
+
+
+    }
+
+    void Add(int n, int q)
+    {
+        var m = (n * q);
+        prices.Add(m);
+        var t = prices.Sum();
+        Price = t;
+
+    }
+    void Cal(int n)
+    {
+        shopping_price.Add(n);
+        var t = shopping_price.Sum();
+        ShoppingPrice = t;
+
+    }
+
+    async Task Post()
+    {
+        order.Status = "Not Delivered";
+        var e = (Price + ShoppingPrice);
+        order.TotalPrice = e.ToString();
+        order.CartId = Guid.Parse(cartId);
+        var c = await _service.PostOrder(order);
+        await Order(c.OrderId);
+        await Delete();
+        await _main.Logger("New order added");
+        router.NavigateTo($"/payments/{c.OrderId}");
+
+    }
+
+    async Task Order(Guid OrderId)
+    {
+        foreach (var item in products)
+        {
+            var input = new Initial
+                {
+                    OrderId = OrderId,
+                    User = user,
+                    Status = "Not Delivered",
+                    ProductId = item.ProductId,
+                    Image_1 = item.Image_1,
+                    Quantity = item.Quantity,
+                    ProductName = item.ProductName,
+                    Price = item.Price,
+                    ShippingPrice = item.ShippingPrice
+                };
+
+            await _db.Initials.AddAsync(input);
+            await _db.SaveChangesAsync();
+        }
+    }
+    async Task Delete()
+    {
+        foreach (var item in products)
+        {
+            await _col.DeleteProductCollection(item.ProductCollectionId);
+
+        }
+    }
+
+}

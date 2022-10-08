@@ -1,0 +1,254 @@
+﻿ @page "/"
+@using System.Reactive.Linq
+ @inject ProductsController _product
+ @inject ImagesController _image
+ @inject MainService _main
+ @inject ProductCollectionsController _collection
+ @inject ApplicationDbContext _db
+ @inject UserManager<IdentityUser> _user
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="banner banner-big banner-overlay">
+                <a href="#">
+                    <img src="anthony-espinosa-6iqpLKqeaE0-unsplash.jpg" style="height:700px;" alt="Banner">
+                </a>
+
+                <div class="banner-content banner-content-center">
+                    <h3 class="banner-subtitle text-white"><a href="#">New Collection</a></h3><!-- End .banner-subtitle -->
+                    <h2 class="banner-title text-white"><a href="#">Shop Bread Cake</a></h2><!-- End .banner-title -->
+                    <a href="/categories" class="btn underline"><span>Discover Now</span></a>
+                </div><!-- End .banner-content -->
+            </div><!-- End .banner -->
+        </div><!-- End .col-lg-6 -->
+
+        <div class="col-lg-6">
+            <div class="banner banner-big banner-overlay">
+                <a href="#">
+                    <img src="deva-williamson-pZZJwwNPy2k-unsplash.jpg" style="height:700px;" alt="Banner">
+                </a>
+
+                <div class="banner-content banner-content-center">
+                    <h3 class="banner-subtitle text-white"><a href="#">New Collection</a></h3><!-- End .banner-subtitle -->
+                    <h2 class="banner-title text-white"><a href="#">Shop Wedding Cakes</a></h2><!-- End .banner-title -->
+                    <a href="/categories" class="btn underline"><span>Discover Now</span></a>
+                </div><!-- End .banner-content -->
+            </div><!-- End .banner -->
+        </div><!-- End .col-lg-6 -->
+    </div><!-- End .row -->
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="banner banner-overlay text-white">
+                <a href="#">
+                    <img src="david-holifield-kPxsqUGneXQ-unsplash.jpg" style="height:400px;" alt="Banner">
+                </a>
+
+                <div class="banner-content banner-content-right">
+                    <h4 class="banner-subtitle">Birthday Cake</h4><!-- End .banner-subtitle -->
+                    <h3 class="banner-title"><a href="#">Friday<br>sale -30% off</a></h3><!-- End .banner-title -->
+                    <a href="/categories" class="btn underline btn-outline-white-3 banner-link">Shop Now</a>
+                </div><!-- End .banner-content -->
+            </div><!-- End .banner -->
+        </div><!-- End .col-lg-4 -->
+
+        <div class="col-md-6 col-lg-4">
+            <div class="banner banner-overlay text-white">
+                <a href="#">
+                    <img src="jacob-thomas-6jHpcBPw7i8-unsplash.jpg" style="height:400px;" alt="Banner">
+                </a>
+
+                <div class="banner-content">
+                    <h4 class="banner-subtitle"><a href="#">Chocolate Cake</a></h4><!-- End .banner-subtitle -->
+                    <h3 class="banner-title"><a href="#">2022 Winter<br>up to 50% off</a></h3><!-- End .banner-title -->
+                    <a href="/categories" class="btn underline banner-link">Shop Now</a>
+                </div><!-- End .banner-content -->
+            </div><!-- End .banner -->
+        </div><!-- End .col-lg-4 -->
+
+        <div class="col-md-6 col-lg-4">
+            <div class="banner banner-overlay text-white">
+
+                <img src="pranjall-kumar-lRAApjOIaFs-unsplash.jpg" style="height:400px;" alt="Banner">
+
+
+                <div class="banner-content banner-content-right mr">
+                    <h4 class="banner-subtitle"><a href="#">New in</a></h4><!-- End .banner-subtitle -->
+                    <h3 class="banner-title"><a href="#">Black<br>Chocolate</a></h3><!-- End .banner-title -->
+                    <a href="/categories" class="btn underline btn-outline-white-3 banner-link">Shop Now</a>
+                </div><!-- End .banner-content -->
+            </div><!-- End .banner -->
+        </div><!-- End .col-lg-4 -->
+    </div><!-- End .row -->
+</div><!-- End .container-fluid -->
+
+<div class="icon-boxes-container bg-transparent">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-12 icon-boxes">
+                <div class="col-sm-6 col-lg-4">
+                    <div class="icon-box icon-box-side">
+                        <span class="icon-box-icon">
+                            <i class="icon-truck"></i>
+                        </span>
+
+                        <div class="icon-box-content">
+                            <h3 class="icon-box-title">Payment & Delivery</h3><!-- End .icon-box-title -->
+                            <p>Free shipping for orders over $150</p>
+                        </div><!-- End .icon-box-content -->
+                    </div><!-- End .icon-box -->
+                </div><!-- End .col-sm-6 col-lg-4 -->
+
+                <div class="col-sm-6 col-lg-4">
+                    <div class="icon-box icon-box-side">
+                        <span class="icon-box-icon">
+                            <i class="icon-rotate-left"></i>
+                        </span>
+
+                        <div class="icon-box-content">
+                            <h3 class="icon-box-title">No Return & Refund</h3><!-- End .icon-box-title -->
+                            <p>Exellent and exceptional talent</p>
+                        </div><!-- End .icon-box-content -->
+                    </div><!-- End .icon-box -->
+                </div><!-- End .col-sm-6 col-lg-4 -->
+
+                <div class="col-sm-6 col-lg-4">
+                    <div class="icon-box icon-box-side">
+                        <span class="icon-box-icon">
+                            <i class="icon-headphones"></i>
+                        </span>
+
+                        <div class="icon-box-content">
+                            <h3 class="icon-box-title">Quality Support</h3><!-- End .icon-box-title -->
+                            <p>Alway online feedback 24/7</p>
+                        </div><!-- End .icon-box-content -->
+                    </div><!-- End .icon-box -->
+                </div><!-- End .col-sm-6 col-lg-4 -->
+            </div>
+        </div><!-- End .row -->
+    </div><!-- End .container -->
+</div><!-- End .icon-boxes-container -->
+
+<div class="bg-light-2 pt-6 pb-6 featured">
+    <h4 align="center">FEATURED PRODUCTS</h4>
+    <div id="product" class="container-fluid">
+        <div class="row">
+
+            @foreach (var item in pro)
+            {
+                <div class="product col-md-3 col-sm-3 text-center">
+                    <figure class="product-media">
+                        <a>
+                            <img src="@(_main.Port + item.Image_1)" style="height:300px;" alt="Product image" class="product-image">
+                            <img src="@(_main.Port + item.Image_2)" style="height:300px;" alt="Product image" class="product-image-hover">
+
+                        </a>
+
+                        <div class="product-action-vertical">
+                            @* <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>*@
+                            <a href="/productdetail/@item.ProductId" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                        </div><!-- End .product-action-vertical -->
+
+                   <AuthorizeView>
+                    <Authorized>
+                 <div class="product-action" style="color:white;">
+                            <button @onclick="@(()=> AddToCart(@item.ProductId,@item))" class="btn btn-info btn-lg w-100 text-white"><i class="icon-shopping-cart"></i><span>add to cart</span></button>
+                        </div><!-- End .product-action -->
+                    </Authorized>
+                </AuthorizeView>
+                </figure><!-- End .product-media -->
+
+                <div class="product-body">
+                        <h3 class="product-title"><strong>@item.ProductName</strong></h3><!-- End .product-title -->
+                    <div class="product-price">
+                            $&nbsp; @item.Price
+                        </div><!-- End .product-price -->
+                    <div class="ratings-container">
+                            <div class="ratings">
+                                <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                        </div><!-- End .ratings -->
+                    </div><!-- End .rating-container -->
+                </div><!-- End .product-body -->
+            </div>
+                <br />
+                <!-- End .product -->
+            }
+
+        </div>
+    </div><!-- End .container-fluid -->
+</div><!-- End .bg-light-2 pt-4 pb-4 -->
+
+<div class="mb-6"></div><!-- End .mb-6 -->
+@code {
+    const string port = "https://localhost:7030";
+    public List<Product> pro = new();
+    public Guid ID;
+    public Product product = new();
+    public BehaviorSubject<Product> products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Init();
+    }
+
+
+    async Task Init()
+    {
+        var res = await GetProducts();
+        res.Subscribe(r =>
+        {
+            pro = r;
+        });
+        var req = await _main.CheckCartAsync();
+        req.Subscribe(r =>
+        {
+            if(r != null)
+            {
+                ID = Guid.Parse(r);
+            }
+        });
+
+
+    }
+
+    async Task<BehaviorSubject<List<Product>>> GetProducts()
+    {
+        var sub = new BehaviorSubject<List<Product>>(null);
+        var req = await _product.GetProducts();
+        sub.OnNext(req.ToList());
+
+        return sub;
+    }
+
+    async Task AddToCart(Guid Id, Product P)
+    {
+        var pro = new ProductCollection
+            {
+                CartId = ID,
+                ProductId = P.ProductId,
+                ProductName = P.ProductName,
+                Price = P.Price,
+                Quantity = "1",
+                Image_1 = P.Image_1,
+                Image_2 = P.Image_2,
+                ShippingPrice = P.ShippingPrice,
+                Description = P.Description,
+                Rating = P.Rating,
+                Tag = P.Tag
+            };
+
+        await _collection.PostProductCollection(pro);
+        await _main.Logger("New product added to cart");
+        var e = await _main.GetCartItemsAsync(ID);
+        e.Subscribe(y =>
+        {
+            _main.CartItems.OnNext(y);
+        });
+
+    }
+
+
+
+ }

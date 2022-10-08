@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Microsoft.Extensions.Caching.Memory
+@inject NavigationManager router
+@inject CategoriesController _category
+@inject MainService _main
+@inject IMemoryCache _store
+@inject CartsController _cart
+
+<div class="header-middle sticky-header">
+    <div class="container-fluid">
+        <div class="header-left">
+            <button class="mobile-menu-toggler">
+                <span class="sr-only">Toggle menu</span>
+                <i class="icon-bars"></i>
+            </button>
+
+            <a href="/" class="logo">
+                <h2>MCake</h2>
+            </a>
+            <style>
+                .active {
+                    color: brown;
+                }</style>
+            <nav class="main-nav">
+                <ul class="menu sf-arrows">
+                    <li class="megamenu-container active">
+                        <NavLink ActiveClass="active" href="/">Home</NavLink>
+                    </li>
+                    <AuthorizeView Roles="Admin,Manager">
+                    <Authorized>
+                    <li>
+                        <NavLink ActiveClass="active" href="@_main.Port">Administration</NavLink>
+                    </li>
+                    </Authorized>
+                    </AuthorizeView>
+                    
+                    <li>
+                        <NavLink ActiveClass="active" href="/posts">Blog</NavLink>
+
+                    </li>
+
+
+                </ul><!-- End .menu -->
+            </nav><!-- End .main-nav -->
+        </div><!-- End .header-left -->
+
+        <div class="header-right">
+            <div class="header-search header-search-extended header-search-visible">
+                <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                <EditForm Model="@search" OnSubmit="Add">
+                    <div class="header-search-wrapper search-wrapper-wide">
+                        <label for="q" class="sr-only">Search</label>
+                        <InputText @bind-Value="@search.input" type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required />
+                        <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                    </div><!-- End .header-search-wrapper -->
+                </EditForm>
+            </div><!-- End .header-search -->
+
+            <AuthorizeView>
+            <Authorized>
+                 <div class="cart-dropdown">
+                        <a href="/cart/@ID" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="cart-count">@Count</span>
+                        </a>
+                    </div>
+            </Authorized>
+        </AuthorizeView>
+           
+        </div><!-- End .header-right -->
+    </div><!-- End .container-fluid -->
+</div><!-- End .header-middle -->
+@code {
+    const string port = "https://localhost:44310/";
+    public List<Category> categories = new();
+    public Search search = new();
+    public Cart cart = new();
+    public Guid ID;
+    public int Count;
+    public class Search
+    {
+        public string input { get; set; }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        await Cart();
+
+
+
+    }
+
+    async Task Cart()
+    {
+        var r = await _main.NavCheckCartAsync();
+        r.Subscribe(async s =>
+       {
+           if (s != null)
+           {
+               ID = Guid.Parse(s);
+       
+           }
+
+
+       });
+        var i = await _main.NavGetCartItemsAsync(ID);
+        i.Subscribe(e =>
+        {
+            if (e != null)
+            {
+            // Count = e.Count();
+            var w = _main.CartItems.Subscribe(f => { Count = f.Count(); });
+            }
+        });
+
+
+    }
+
+    async Task Get()
+    {
+        var res = await _category.GetCategories();
+        categories = res.Value.ToList();
+    }
+    async Task Add()
+    {
+        OnInitialized();
+        router.NavigateTo($"/search/{search.input}");
+    }
+
+
+}

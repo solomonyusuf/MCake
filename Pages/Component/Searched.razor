@@ -1,0 +1,117 @@
+﻿@page "/search/{term}"
+@inject ProductsController _product
+@inject ImagesController _image
+@inject MainService _main
+@inject ProductCollectionsController _collection
+@inject ApplicationDbContext _db
+
+
+
+<div class="bg-light-2 pt-6 pb-6 featured">
+    <h4 align="center">You searched for @term (reload page to see searched items.)</h4>
+    <h5 align="center">SEARCHED PRODUCTS</h5>
+    <div id="product" class="container-fluid">
+        <div class="row">
+
+            @foreach (var item in pro)
+            {
+                <div class="product col-md-3 col-sm-3 text-center">
+                    <figure class="product-media">
+                        <a>
+                            <img src="@(_main.Port + item.Image_1)" style="height:300px;" alt="Product image" class="product-image">
+                            <img src="@(_main.Port + item.Image_2)" style="height:300px;" alt="Product image" class="product-image-hover">
+
+                        </a>
+
+                        <div class="product-action-vertical">
+                              <a href="/productdetail/@item.ProductId" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                        </div><!-- End .product-action-vertical -->
+
+                    <div class="product-action" style="color:white;">
+                            <button @onclick="@(()=> AddToCart(@item.ProductId,@item))" class="btn btn-info btn-lg w-100 text-white"><i class="icon-shopping-cart"></i><span>add to cart</span></button>
+                        </div><!-- End .product-action -->
+                </figure><!-- End .product-media -->
+
+                <div class="product-body">
+                        <h3 class="product-title"><strong>@item.ProductName</strong></h3><!-- End .product-title -->
+                    <div class="product-price">
+                            $&nbsp; @item.Price
+                        </div><!-- End .product-price -->
+                    <div class="ratings-container">
+                            <div class="ratings">
+                                <div class="ratings-val" style="width: 100%;"></div><!-- End .ratings-val -->
+                        </div><!-- End .ratings -->
+                    </div><!-- End .rating-container -->
+                </div><!-- End .product-body -->
+            </div>
+                <br />
+                <!-- End .product -->
+            }
+
+        </div>
+    </div><!-- End .container-fluid -->
+</div><!-- End .bg-light-2 pt-4 pb-4 -->
+@code {
+    [Parameter]
+    public string term { get; set; }
+    const string port = "https://localhost:7030";
+    public List<Product> pro = new();
+    public Guid ID;
+    public Product product = new();
+    public BehaviorSubject<Product> products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var res = _db.Products.Where(s => s.ProductName.Contains(term)).ToList();
+        pro = res;
+        var r = await _main.CheckCartAsync();
+        r.Subscribe(s =>
+        {
+            if (s != null)
+            {
+                ID = Guid.Parse(s);
+            }
+
+
+        });
+    }
+
+
+
+    async Task<BehaviorSubject<List<Product>>> GetProducts()
+    {
+        var sub = new BehaviorSubject<List<Product>>(null);
+        var req = await _product.GetProducts();
+        sub.OnNext(req.ToList());
+
+        return sub;
+    }
+
+    async Task AddToCart(Guid Id, Product P)
+    {
+        var pro = new ProductCollection
+            {
+                CartId = ID,
+                ProductId = P.ProductId,
+                ProductName = P.ProductName,
+                Price = P.Price,
+                Quantity = "1",
+                Image_1 = P.Image_1,
+                Image_2 = P.Image_2,
+                ShippingPrice = P.ShippingPrice,
+                Description = P.Description,
+                Rating = P.Rating,
+                Tag = P.Tag
+            };
+
+        await _collection.PostProductCollection(pro);
+        await _main.Logger("New product added to cart");
+        var e = await _main.GetCartItemsAsync(ID);
+        e.Subscribe(y =>
+        {
+            _main.CartItems.OnNext(y);
+        });
+
+    }
+
+}

@@ -1,0 +1,38 @@
+﻿@page "/payments/{id}"
+@inject OrdersController _ord
+
+@if (pay.Equals("Direct Transfer"))
+{
+    <strong>Direct transfer method was chosen, order placed sucessfully.</strong>
+}
+
+@if (pay.Equals("Cash Payment or POS Payment"))
+{
+    <strong>Cash Payment or POS Payment method was chosen, order placed sucessfully.</strong>
+}
+@if (pay.Equals("Card Payment"))
+{
+    <strong>Card Payment method was chosen, order placed sucessfully.</strong>
+}
+
+@code {
+
+
+    public string pay;
+    [Parameter]
+    public string id { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    async Task Get()
+    {
+        var d = await _ord.GetOrders();
+        pay = d.Where(s => s.OrderId.ToString().Contains(id)).Select(s => s.PaymentMethod).SingleOrDefault();
+
+
+
+    }
+
+}

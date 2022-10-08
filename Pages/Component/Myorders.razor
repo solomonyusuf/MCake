@@ -1,0 +1,68 @@
+﻿@page "/myorders"
+@inject MainService _main
+@inject ApplicationDbContext _db
+@attribute [Authorize]
+ <div class="page-content">
+	 <h4>My Orders</h4>
+            	<div class="container">
+					<table class="table table-wishlist table-mobile">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+
+						<tbody>
+				@if(orders.Count() > 0)
+				{
+					@foreach (var item in orders)
+						   {
+							   <tr>
+								<td class="product-col">
+									<div class="product">
+										<figure class="product-media">
+											<a href="#">
+												<img src="@(_main.Port + item.Image_1)" alt="Product image">
+											</a>
+										</figure>
+
+										<h3 class="product-title">
+									@item.ProductName
+										</h3><!-- End .product-title -->
+									</div><!-- End .product -->
+								</td>
+								<td>@item.Quantity</td>
+								<td>@item.Status</td>
+							</tr>
+					}
+				}
+				@if(orders.Count()==0)
+				{
+					<tr><td>No data available</td></tr>
+				}
+			</tbody>
+					</table>
+					</div>
+					</div>
+
+
+
+@code {
+	public List<Initial> orders = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await Get();
+	}
+	async Task Get()
+	{ 
+		var b = await _main.Persist_user();
+		b.Subscribe(r =>
+		{
+			orders = _db.Initials.Where(s=>s.User.Contains(r)).ToList();
+		});
+
+	}
+
+}

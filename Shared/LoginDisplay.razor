@@ -1,0 +1,13 @@
+﻿
+<AuthorizeView>
+    <Authorized>
+        <a style="margin:5px;" href="Identity/Account/Manage">&nbsp; Welcome, @context.User.Identity.Name</a>
+    </Authorized>
+    <NotAuthorized>
+        <a style="margin:5px;" href="Identity/Account/Register">Register</a>
+        <a style="margin:5px;" href="Identity/Account/Login"><i class="icon-user">Login</i></a>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
