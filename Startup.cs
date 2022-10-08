@@ -94,9 +94,7 @@ namespace MCake
             services.AddTransient<WishlistsController>();
             services.AddTransient<WishCollectionsController>();
             services.AddTransient<NavCollectionsController>();
-            services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
-            services.BuildServiceProvider().GetService<CartDbContext>().Database.Migrate();
-            services.BuildServiceProvider().GetService<CollectionDbContext>().Database.Migrate();
+
 
 
 
