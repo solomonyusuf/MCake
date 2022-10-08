@@ -94,7 +94,9 @@ namespace MCake
             services.AddTransient<WishlistsController>();
             services.AddTransient<WishCollectionsController>();
             services.AddTransient<NavCollectionsController>();
-
+            services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
+            services.BuildServiceProvider().GetService<CartDbContext>().Database.Migrate();
+            services.BuildServiceProvider().GetService<CollectionDbContext>().Database.Migrate();
 
 
 
@@ -115,9 +117,7 @@ namespace MCake
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            db.Database.MigrateAsync();
-            col.Database.MigrateAsync();
-            cart.Database.MigrateAsync();
+           
             //SetupDb.SeedData(userManager, roleManager);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
