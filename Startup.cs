@@ -94,17 +94,14 @@ namespace MCake
             services.AddTransient<WishlistsController>();
             services.AddTransient<WishCollectionsController>();
             services.AddTransient<NavCollectionsController>();
-            services.BuildServiceProvider().GetService<ApplicationDbContext>().Database.Migrate();
-            services.BuildServiceProvider().GetService<CartDbContext>().Database.Migrate();
-            services.BuildServiceProvider().GetService<CollectionDbContext>().Database.Migrate();
+
 
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext db,
-            CollectionDbContext col, CartDbContext cart)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -117,10 +114,7 @@ namespace MCake
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            db.Database.MigrateAsync();
-            col.Database.MigrateAsync();
-            cart.Database.MigrateAsync();
-            //SetupDb.SeedData(userManager, roleManager);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
