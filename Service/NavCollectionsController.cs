@@ -10,8 +10,8 @@ using MCake.Models;
 
 namespace MCake.Service
 {
-    // [Route("api/NavCollectionsController")]
-    //[ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
     public class NavCollectionsController : ControllerBase
     {
         private readonly NavCollectionDbContext _context;

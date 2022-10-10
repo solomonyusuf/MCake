@@ -10,8 +10,8 @@ using MCake.Models;
 
 namespace MCake.Service
 {
-    //[Route("api/ProductCollections")]
-    //[ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductCollectionsController : ControllerBase
     {
         private readonly CollectionDbContext _context;

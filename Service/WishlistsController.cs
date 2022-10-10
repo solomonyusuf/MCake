@@ -10,8 +10,8 @@ using MCake.Models;
 
 namespace MCake.Service
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
     public class WishlistsController : ControllerBase
     {
         private readonly CartDbContext _context;

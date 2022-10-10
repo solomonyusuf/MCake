@@ -12,8 +12,8 @@ using Blazored.LocalStorage;
 
 namespace MCake.Service
 {
-   // [Route("api/[controller]")]
-    //[ApiController]
+    [Route("api/[controller]")]
+    [ApiController]
     public class CartsController : ControllerBase
     {
         private readonly CartDbContext _context;
