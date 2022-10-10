@@ -16,7 +16,7 @@ namespace MCake.Service
 {
     public class MainService
     {
-        public string Port = "https://localhost:5001";
+        public string Port = "https://mcakeadmin.herokuapp.com";
         private readonly ILocalStorageService _store;
         private readonly ProductCollectionsController _collection;
         private readonly CartsController _cart;
