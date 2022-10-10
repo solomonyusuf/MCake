@@ -12,7 +12,10 @@
     <h5 align="center">SEARCHED PRODUCTS</h5>
     <div id="product" class="container-fluid">
         <div class="row">
-
+            @if (pro.Count() == 0)
+            {
+                <h4 align="center">Sorry no related product found.</h4>
+            }
             @foreach (var item in pro)
             {
                 <div class="product col-md-3 col-sm-3 text-center">
