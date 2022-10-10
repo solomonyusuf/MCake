@@ -45,19 +45,20 @@ namespace MCake
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                // options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                 ///options.UseSqlite("Filename=mcake.db")
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 );
             services.AddDbContext<CartDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 ///options.UseSqlite("Filename=mcake.db")
                 );
             services.AddDbContext<CollectionDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+               options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 ///options.UseSqlite("Filename=mcake.db")
                 );
             services.AddDbContext<NavCollectionDbContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+              options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 ///options.UseSqlite("Filename=mcake.db")
                 );
             services.AddIdentity<IdentityUser, Role>(options => options.SignIn.RequireConfirmedAccount = false)

@@ -12,6 +12,7 @@ namespace MCake.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public virtual DbSet<Product> Products { get; set; }
