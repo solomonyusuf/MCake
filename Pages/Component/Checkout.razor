@@ -233,7 +233,7 @@
         await Order(c.OrderId);
         await Delete();
         await _main.Logger("New order added");
-        router.NavigateTo($"/payments/{c.OrderId}");
+        router.NavigateTo($"/checkout/payments/{c.OrderId}");
 
     }
 

@@ -18,8 +18,8 @@
                     <div id="product-zoom-gallery" class="product-image-gallery">
                         @foreach (var item in images)
                        {
-                           <a class="product-gallery-item active" href="@(_main.Port + item.ImagePath)">
-                            <img src="@(_main.Port + item.ImagePath)" alt="product side"/>
+                           <a class="product-gallery-item active" href="@(item.ImagePath)">
+                            <img src="@(item.ImagePath)" alt="product side"/>
                         </a>
                        }
                     </div><!-- End .product-image-gallery -->

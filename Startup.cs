@@ -45,24 +45,24 @@ namespace MCake
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
-                ///options.UseSqlite("Filename=mcake.db")
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+                 //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
+                 ///options.UseSqlite("Filename=mcake.db")
+                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 );
             services.AddDbContext<CartDbContext>(options =>
-                //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
-                ///options.UseSqlite("Filename=mcake.db")
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+                 //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
+                 ///options.UseSqlite("Filename=mcake.db")
+                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 );
             services.AddDbContext<CollectionDbContext>(options =>
-                //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
-                ///options.UseSqlite("Filename=mcake.db")
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+                 //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
+                 ///options.UseSqlite("Filename=mcake.db")
+                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 );
             services.AddDbContext<NavCollectionDbContext>(options =>
-                //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
-                ///options.UseSqlite("Filename=mcake.db")
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+                 //options.UseSqlServer(Configuration.GetConnectionString("Sql"))
+                 ///options.UseSqlite("Filename=mcake.db")
+                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
                 );
             services.AddIdentity<IdentityUser, Role>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<Role>()
@@ -70,6 +70,7 @@ namespace MCake
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
+            services.AddEntityFrameworkNpgsql();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();

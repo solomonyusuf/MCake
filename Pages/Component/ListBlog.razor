@@ -21,7 +21,7 @@
                             <div class="row align-items-center">
                                 <div class="col-md-4">
                                     <div class="entry-media">
-                                        <img src="@(_main.Port + i.ImagePath)" style="height:250px;width:300px;" alt="image desc" />
+                                        <img src="data:@i.Content;base64, @(Convert.ToBase64String(i.ImagePath))" style="height:250px;width:300px;" alt="image desc" />
 
                                     </div><!-- End .entry-media -->
                             </div><!-- End .col-md-5 -->
@@ -81,7 +81,7 @@
     </div><!-- End .page-content -->
 </div>
 @code {
-    const string port = "https://localhost:7030/";
+     
     public List<Blog> list = new();
 
     protected override async Task OnInitializedAsync()
