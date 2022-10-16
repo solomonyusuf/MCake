@@ -18,9 +18,9 @@
                     <div id="product-zoom-gallery" class="product-image-gallery">
                         @foreach (var item in images)
                        {
-                           <a class="product-gallery-item active" href="@(item.ImagePath)">
-                            <img src="@(item.ImagePath)" alt="product side"/>
-                        </a>
+                           
+                            <img src="@(item.ImagePath)" class="product-gallery-item active" alt="product side"/>
+                       
                        }
                     </div><!-- End .product-image-gallery -->
                 </div><!-- End .row -->
